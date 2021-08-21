@@ -1,0 +1,128 @@
+{% extends 'blog/base.html' %}
+
+{% block title %} Naman's Blog {% endblock title %}
+{% block metadesc %} <meta name="description" content="Hey! This is my OSM Bootstrap-Django based blog sys :)">  {% endblock metadesc %}
+
+{% block blogcontent %} 
+<h1 class="page-header my-4">Share Creative Knowelege <small>By Naman Doshi</small></h1>
+                  <hr>
+{% for post in allPosts  %}
+
+
+<div class="blogs" >
+    <h2>
+        <a href="/blog/{{post.slug}}" class="text-dark">{{post.title}}</a>
+    </h2>
+    <p>{{post.description}}</p>
+    <a href="/blog/{{post.slug}}" class="btn btn-sm btn-outline-dark">
+        Read more
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+    <hr>
+</div>
+{% endfor %}
+<button class="btn btn-primary float-left"  id="prev">← Previous </button>
+<button class="btn btn-primary float-right"  id="next">Next →</button>
+{% endblock blogcontent %}
+{% block footer %} 
+        <footer class="container-fluid bg-dark my-0 py-3 text-light">
+            <p class="mb-0 text-center ">Copyright © 2020-2021 Naman Doshi</p>
+            <p class="mb-0 text-center font-weight-light" style="opacity: 0.5;">Much Obliged To CodeWithHarry</p>
+        </footer>
+        
+        <!--<script src="/static/assets/js/mainBlog.js"></script>
+        -->
+        <script>
+            var blogs = document.getElementsByClassName("blogs");
+            const prev = document.getElementById("prev");
+            const next = document.getElementById("next");
+            var totalBlogs = blogs.length;
+            var pageNum = 1;
+
+            function inVis(obj) {
+            obj.style.opacity = 0;
+            obj.style.visibility = "hidden";
+            obj.style.display = "none";
+            }
+
+            function vis(obj) {
+            obj.style.opacity = 1;
+            obj.style.visibility = "visible";
+            obj.style.display = "";
+            }
+
+            if (totalBlogs > 10) {
+            pageNum = Math.ceil(totalBlogs / 10);
+            //console.log(pageNum);
+            next.disabled = false;
+            } else {
+            next.disabled = true;
+            }
+
+            if (window.location.href == "https://doshinaman.herokuapp.com/blog/") {
+            prev.disabled = true;
+            } else if (window.location.href == "https://doshinaman.herokuapp.com/blog/?page=1") {
+            prev.disabled = true;
+            } else {
+            prev.disabled = false;
+            }
+
+            if (window.location.href == "https://doshinaman.herokuapp.com/blog/?page=" + pageNum) {
+            next.disabled = true;
+            }
+
+            var nextCount = 1;
+
+            next.onclick = function () {
+            if (window.location.href == "https://doshinaman.herokuapp.com/blog/") {
+                nextCount++;
+                location.href = "?page=" + nextCount;
+            } else {
+                var url = new URL(window.location.href);
+                var pageCount = url.searchParams.get("page");
+                pageCount++;
+                location.href = "?page=" + pageCount;
+            }
+            };
+
+            prev.onclick = function () {
+            if (window.location.href == "https://doshinaman.herokuapp.com/blog/?page=1") {
+                location.href = "https://doshinaman.herokuapp.com/blog/";
+            } else {
+                var url = new URL(window.location.href);
+                var pageCount = url.searchParams.get("page");
+                pageCount--;
+                location.href = "?page=" + pageCount;
+            }
+            };
+
+            for (let j = 1; j <= pageNum; j++) {
+            if (
+                window.location.href == "https://doshinaman.herokuapp.com/blog/?page=1" ||
+                window.location.href == "https://doshinaman.herokuapp.com/blog/"
+            ) {
+                for (let i = 1; i <= totalBlogs; i = i + 1) {
+                if (i >= 10) {
+                    inVis(blogs[i]);
+                }
+                //console.log(i);
+                }
+            } else if (window.location.href == "https://doshinaman.herokuapp.com/blog/?page=" + j) {
+                var maxLen = j * 10;
+                var minLen = Math.abs((j * 10) / j - maxLen);
+                console.log(minLen);
+                console.log(maxLen);
+                for (let i = 0; i < totalBlogs; i = i + 1) {
+                //if(j*10)
+                if (i >= minLen && i < maxLen + 1) {
+                    console.log(i);
+                    continue;
+                }
+                inVis(blogs[i]);
+                //console.log(i);
+                }
+            }
+            }
+
+        </script>
+    {% endblock footer %}

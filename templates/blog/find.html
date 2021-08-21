@@ -1,0 +1,48 @@
+{% extends 'blog/base.html' %}
+
+{% block title %} Naman's Search Sys {% endblock title %}
+
+{% block blogcontent %} 
+
+<h1>Test Find Page</h1>
+
+<!--
+<h1 class="page-header my-4">Search results : <small>for {{searched}}</small></h1>
+    <hr>
+{% if allPosts|length < 1 %}
+ 
+    <h2><i>No search results</i></h2>
+    {% block metadesc %} <meta name="description" content="No search result">  {% endblock metadesc %}
+    Your search query : <b>{{query}}</b> did not match any documents. <br>
+    Suggestions:
+    <ul>
+    <li>Make sure that all words are spelled correctly.</li>
+    <li>Try more general keywords.</li>
+    <li> Try fewer keywords.</li>
+    <li> Try different keywords.</li>
+    </li>
+    </ul>
+
+
+{% endif %}
+
+    {% for post in allPosts  %}
+    
+    <div class="blogs">
+        {% block metadesc %} <meta name="description" content="{{post.description}}">  {% endblock metadesc %}
+        <h2>
+            <a href="/blog/{{post.slug}}" class="text-dark">{{post.title}}</a>
+        </h2>
+        <p>{{post.description}}</p>
+        <a href="/blog/{{post.slug}}" class="btn btn-sm btn-outline-primary">
+            Read more
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        <hr>
+    </div>
+    {% endfor %}
+    -->
+
+{% endblock blogcontent %}
+
+

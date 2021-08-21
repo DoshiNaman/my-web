@@ -1,0 +1,106 @@
+{% extends 'blog/base.html' %}
+{% block title %} {{post.title}} {% endblock title %}
+{% block metadesc %} <meta name="description" content="{{post.description}}">  {% endblock metadesc %}
+
+{% block blogcontent %}  
+{% load humanize %}
+{% load extras %}
+
+<p class="my-4">Posted on {{post.timeStamp|date}} by <a href="/#about">{{post.author}}</a> (<span > {{post.views}} views </span>)</p>
+    
+<h1 class="my-2">{{post.title}}</h1>
+
+    <h3 class="py-2">{{post.description}}</h3>
+    <hr>
+    {% if post.image %}
+    <div class="card" style="width: 18rem;">
+    <img src='media/{{post.image}}' class="card-img-top" alt="...">
+    </div>
+    {% endif %}
+    
+    <p>{{post.content|safe}}</p>
+    <hr>
+    
+    
+
+    <h2> Comments ({{comments.count}}) </h2>
+    <div class="my-2">
+        {% if user.is_authenticated %}
+        <form action="/blog/postComment" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exampleInputEmail1">Post Comment </label>
+                <input type="text" class="form-control" name="comment" placeholder="Enter comment here">
+            </div>
+            <input type="hidden" name="postSno" value="{{post.sno}}">
+            <input type="hidden" name="parentSno" value="">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        {% else %}
+        Please login to post a comment
+        {% endif %}
+    </div>
+
+    {% for comment in comments %}
+    <div class="row mt-4">
+        
+        <div class="col-md-8 col-lg-10 col-xl-10 commentContainer">
+            <div class="my-2 mx-2">
+                <b>👤 {{comment.user.username}} </b>
+                <span class="badge badge-secondary ">{{comment.timestamp| naturaltime}}</span>
+            </div>
+            <div>{{comment.comment}}</div>
+            <div class="reply mx-0">
+                {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-primary my-2" type="button" data-toggle="collapse" data-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="replyBox{{comment.sno}}">
+                    Reply
+                </button>
+                <div class="collapse" id="replyBox{{comment.sno}}">
+                    <div class="card card-body my-2">
+                        <form action="/blog/postComment" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="comment">Post a reply </label>
+                                <input type="text" class="form-control" name="comment" placeholder="Enter comment here">
+                                <input type="hidden" name="parentSno" value="{{comment.sno}}">
+                            </div>
+                            <input type="hidden" name="postSno" value="{{post.sno}}">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <button data-toggle="modal" data-target="#loginModal" class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="replyBox{{comment.sno}}">
+                    Login to reply
+                </button>
+                {% endif %}
+                <div class="replies my-2 ">
+                    {% for reply in replyDict|get_val:comment.sno %}
+                    <div class="row my-2">
+                        <div class="col-md-1 ">
+                        </div>
+                        <div class="col-md-11">
+                            <div class="col-md-11 ">
+                                <b>👤 {{reply.user.username}} </b> <span class="badge badge-secondary ">{{reply.timestamp| naturaltime}}</span>
+                                <div>{{reply.comment}}</div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+
+
+    
+{% endblock blogcontent %}
+{% block footer %} 
+<footer class="container-fluid bg-dark my-0 py-3 text-light">
+    <p class="mb-0 text-center ">Copyright © 2020-2021 Naman Doshi</p>
+    <p class="mb-0 text-center font-weight-light" style="opacity: 0.5;">Much Obliged To CodeWithHarry</p>
+</footer>
+{% endblock footer %}
